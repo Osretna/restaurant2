@@ -1,0 +1,6 @@
+{
+  "name": "Foody Plus",
+  "description": "منصة فودي بلس لادارة مراكز المطاعم (SaaS) - Multi-tenant Restaurant Network Management Platform with Multi-theming, Order Flow, and Multilingual Support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

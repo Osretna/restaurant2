@@ -1,0 +1,21 @@
+{
+  "short_name": "FoodyPlus",
+  "name": "Foody Plus SaaS Platform",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/color/192/000000/restaurant.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://img.icons8.com/color/512/000000/restaurant.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#F9FAFB",
+  "theme_color": "#F97316",
+  "display": "standalone",
+  "orientation": "portrait"
+}
