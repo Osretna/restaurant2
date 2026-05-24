@@ -735,7 +735,7 @@ export default function App() {
                     <input
                       type="email"
                       required
-                      placeholder="e.g. s.mohamed1111111@gmail.com"
+                      placeholder={lang === 'ar' ? "اسم المستخدم" : "user name"}
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
                       onKeyDown={(e) => {
@@ -802,7 +802,7 @@ export default function App() {
                   <span className={`w-2.5 h-2.5 rounded-full ${currentUser.role === 'admin' ? 'bg-amber-500' : currentUser.role === 'owner' ? 'bg-orange-500' : 'bg-indigo-500'}`} />
                   <div>
                     <span className="text-gray-400">{lang === 'ar' ? 'مرحباً:' : 'Authorized Account:'}</span>
-                    <strong className="text-gray-800 dark:text-white font-semibold ml-1.5">{currentUser.email}</strong>
+                    <strong className="text-gray-800 dark:text-white font-semibold ml-1.5">{lang === 'ar' ? 'اسم المستخدم' : 'user name'}</strong>
                     <span className="text-[10px] bg-gray-100 dark:bg-zinc-800 text-gray-650 dark:text-emerald-400 px-2 py-0.5 rounded-md ml-1.5 uppercase font-bold text-xs">
                       {t[currentUser.role === 'admin' ? 'admin_portal' : currentUser.role === 'owner' ? 'owner_portal' : 'customer_portal']}
                     </span>
