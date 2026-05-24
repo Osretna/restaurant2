@@ -1112,7 +1112,22 @@ export default function AdminPanel({
                 };
 
                 const handleCopyText = () => {
-                  navigator.clipboard.writeText(generateInvoiceShareText());
+                  try {
+                    if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+                      navigator.clipboard.writeText(generateInvoiceShareText());
+                    } else {
+                      const textArea = document.createElement("textarea");
+                      textArea.value = generateInvoiceShareText();
+                      textArea.style.position = "fixed";
+                      document.body.appendChild(textArea);
+                      textArea.focus();
+                      textArea.select();
+                      document.execCommand('copy');
+                      document.body.removeChild(textArea);
+                    }
+                  } catch (err) {
+                    console.warn('Fallback copy failed', err);
+                  }
                   setCopiedInvoiceText(true);
                   setTimeout(() => setCopiedInvoiceText(false), 3000);
                 };

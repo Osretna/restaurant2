@@ -21,17 +21,43 @@ import restaurantBg from './assets/images/modern_restaurant_bg_1779381549048.png
 // Ref to firebase database SDK helpers
 import { ref, set, get, onValue, update } from 'firebase/database';
 
+// Safe localStorage utility that handles iframe / private browsing security exceptions
+const safeStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      console.warn("Storage item access failure on browser:", e);
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.warn("Storage writing restricted on browser:", e);
+    }
+  },
+  removeItem: (key: string): void => {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.warn("Storage removal restricted on browser:", e);
+    }
+  }
+};
+
 export default function App() {
   // Locale state
   const [lang, setLang] = useState<'ar' | 'en'>(() => {
-    const cached = localStorage.getItem('foody_lang');
+    const cached = safeStorage.getItem('foody_lang');
     return (cached === 'en' || cached === 'ar') ? cached : 'ar';
   });
   const t = translations[lang];
 
   // Theme Switches
   const [theme, setTheme] = useState<AppTheme>(() => {
-    const cached = localStorage.getItem('foody_theme');
+    const cached = safeStorage.getItem('foody_theme');
     return (cached && ['white', 'black', 'blue', 'gold', 'orange'].includes(cached)) ? cached as AppTheme : 'orange';
   });
 
@@ -40,7 +66,7 @@ export default function App() {
 
   // Active Authenticated user
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
-    const cached = localStorage.getItem('foody_current_user');
+    const cached = safeStorage.getItem('foody_current_user');
     if (cached) {
       try {
         return JSON.parse(cached);
@@ -76,9 +102,9 @@ export default function App() {
     }
 
     // 2. Load cached structures from localStorage as base fallback
-    const localRests = localStorage.getItem('foody_restaurants');
-    const localOrders = localStorage.getItem('foody_orders');
-    const localUsers = localStorage.getItem('foody_users');
+    const localRests = safeStorage.getItem('foody_restaurants');
+    const localOrders = safeStorage.getItem('foody_orders');
+    const localUsers = safeStorage.getItem('foody_users');
 
     if (localRests) {
       try {
@@ -89,7 +115,7 @@ export default function App() {
       }
     } else {
       setRestaurants(seedRestaurants);
-      localStorage.setItem('foody_restaurants', JSON.stringify(seedRestaurants));
+      safeStorage.setItem('foody_restaurants', JSON.stringify(seedRestaurants));
     }
 
     if (localOrders) {
@@ -101,7 +127,7 @@ export default function App() {
       }
     } else {
       setOrders(seedOrders);
-      localStorage.setItem('foody_orders', JSON.stringify(seedOrders));
+      safeStorage.setItem('foody_orders', JSON.stringify(seedOrders));
     }
 
     if (localUsers) {
@@ -113,43 +139,43 @@ export default function App() {
       }
     } else {
       setUsers(seedUsers);
-      localStorage.setItem('foody_users', JSON.stringify(seedUsers));
+      safeStorage.setItem('foody_users', JSON.stringify(seedUsers));
     }
   }, []);
 
   // Sync to localStorage whenever states change locally in Demo mode
   useEffect(() => {
     if (execMode === 'demo' && restaurants.length > 0) {
-      localStorage.setItem('foody_restaurants', JSON.stringify(restaurants));
+      safeStorage.setItem('foody_restaurants', JSON.stringify(restaurants));
     }
   }, [restaurants, execMode]);
 
   useEffect(() => {
     if (execMode === 'demo' && orders.length > 0) {
-      localStorage.setItem('foody_orders', JSON.stringify(orders));
+      safeStorage.setItem('foody_orders', JSON.stringify(orders));
     }
   }, [orders, execMode]);
 
   useEffect(() => {
     if (execMode === 'demo' && users.length > 0) {
-      localStorage.setItem('foody_users', JSON.stringify(users));
+      safeStorage.setItem('foody_users', JSON.stringify(users));
     }
   }, [users, execMode]);
 
   // Synchronize dynamic visual and user configurations
   useEffect(() => {
-    localStorage.setItem('foody_lang', lang);
+    safeStorage.setItem('foody_lang', lang);
   }, [lang]);
 
   useEffect(() => {
-    localStorage.setItem('foody_theme', theme);
+    safeStorage.setItem('foody_theme', theme);
   }, [theme]);
 
   useEffect(() => {
     if (currentUser) {
-      localStorage.setItem('foody_current_user', JSON.stringify(currentUser));
+      safeStorage.setItem('foody_current_user', JSON.stringify(currentUser));
     } else {
-      localStorage.removeItem('foody_current_user');
+      safeStorage.removeItem('foody_current_user');
     }
   }, [currentUser]);
 
